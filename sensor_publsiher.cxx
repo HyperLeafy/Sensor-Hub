@@ -25,7 +25,10 @@ void temp_sensor_data(dds::pub::DataWriter<sensorData::msg>& tempWriter ,double_
         // This what generates the actuall value
         temp_meassge.sensor_id("Temp-Sensor");
         temp_meassge.value(dis_generator(RD_T));
-        temp_meassge.timeStamp(std::chrono::system_clock::now().time_since_epoch().count());
+        temp_meassge.timeStamp(std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+            ).count()
+        );
         // Publishing the message
         // tempWriter.write(mesured_reading_temp);
         tempWriter.write(temp_meassge);
@@ -44,7 +47,10 @@ void press_sensor_data(dds::pub::DataWriter<sensorData::msg>& pressWriter ,doubl
         // This what generates the actuall value
         pressure_meassge.sensor_id("Press-Sensor");
         pressure_meassge.value(dis_generator(RD_T)); 
-        pressure_meassge.timeStamp(std::chrono::system_clock::now().time_since_epoch().count());
+        pressure_meassge.timeStamp(std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+            ).count()
+        );
         // Publishing the pressure message
         pressWriter.write(pressure_meassge);
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));       
@@ -60,7 +66,10 @@ void flow_sensor_data(dds::pub::DataWriter<sensorData::msg>& flowWriter, double_
         // This what generates the actuall value
         measured_reading_flow.sensor_id("flow-Sensor");
         measured_reading_flow.value(dis_generator(RD_P));
-        measured_reading_flow.timeStamp(std::chrono::system_clock::now().time_since_epoch().count());
+        measured_reading_flow.timeStamp(std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+            ).count()
+        );
         // Publishing the flow message
         flowWriter.write(measured_reading_flow);
         std::this_thread::sleep_for(std::chrono::milliseconds(1000)); 
