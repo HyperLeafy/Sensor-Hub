@@ -1,0 +1,10 @@
+
+for CMake refrence
+https://cyclonedds.io/docs/cyclonedds/latest/getting_started/helloworld/helloworld_building.html
+https://github.com/eclipse-cyclonedds/cyclonedds-cxx/blob/9c8ae7e3f0d6cb5d201d886516744e45402f8430/examples/helloworld/CMakeLists.txt
+
+for dds examples
+https://github.com/eclipse-cyclonedds/cyclonedds-cxx/blob/9c8ae7e3f0d6cb5d201d886516744e45402f8430/examples/helloworld/publisher.cpp
+
+for idl 
+https://deepwiki.com/eclipse-cyclonedds/cyclonedds-cxx/2-idl-processing-and-code-generation

@@ -1,0 +1,8 @@
+module sensorData
+{
+    struct msg{
+        string sensor_id;
+        double value;
+        long timeStamp;
+    };  
+};

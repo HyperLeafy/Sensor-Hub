@@ -1,0 +1,17 @@
+# Compiled Object files and libraries
+*.o
+*.obj
+*.ko
+*.lo
+*.la
+*.so
+*.a
+*.dll
+*.lib
+
+# Build directories
+build/
+
+# IDE specific files (Visual Studio)
+.vs/
+.vscode/
