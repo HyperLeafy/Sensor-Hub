@@ -90,7 +90,7 @@ void aggregrator(safeQueue<sensorData::msg>& temp, safeQueue<sensorData::msg>& p
     // safeQueue<sensorData::msg> temparory_catch ;
     std::vector<sensorData::msg> temporary_container;
     bool haveTemp = false, havePress = false, haveFlow = false;
-    const int8_t TOLLARANCE_IN_MS = 100;
+    const int16_t TOLLARANCE_IN_MS = 1000;
     sensorData::msg data;
 
     while (!ctrl_switch_aggregator){
@@ -106,7 +106,7 @@ void aggregrator(safeQueue<sensorData::msg>& temp, safeQueue<sensorData::msg>& p
             
             // For batching out the messages
             for (auto it = temporary_container.begin(); it!=temporary_container.end();){
-                if ((std::abs(it->timeStamp()) - ref_timestamp) <=TOLLARANCE_IN_MS){
+                if (std::abs(it->timeStamp() - ref_timestamp) <= TOLLARANCE_IN_MS){
                     to_publish.push_back(*it);
                     it = temporary_container.erase(it);
                 }
@@ -118,11 +118,11 @@ void aggregrator(safeQueue<sensorData::msg>& temp, safeQueue<sensorData::msg>& p
                 sensorWriter.write(msg);
                 std::cout << "[AGG] " << msg.sensor_id() << " " << msg.value() << " " << msg.timeStamp() << "\n";
             }
+
+            // TO delay this thread a bit
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
         }
     }
-
-    // TO delay this thread a bit
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
 }
 
 
@@ -139,11 +139,6 @@ int32_t main() {
 
     try{
         dds::domain::DomainParticipant pub_participent_entity(domain::default_id());
-
-        // Topic for each sensor
-        dds::topic::Topic<sensorData::msg> tempTopic(pub_participent_entity, "TEMP-TOPIC");
-        dds::topic::Topic<sensorData::msg> presTopic(pub_participent_entity, "PRESSURE-TOPIC");
-        dds::topic::Topic<sensorData::msg> flowTopic(pub_participent_entity, "FLOW-TOPIC");
 
         // Topic for sigle channle
         dds::topic::Topic<sensorData::msg> sensorTelemetyTopic(pub_participent_entity, "SENSOR-TELEMETRY");
@@ -179,6 +174,11 @@ int32_t main() {
 
         //
         std::cout<<"===[PUBLISHER] STOPPED"<<std::endl;
+        temp_thread.join();
+        pres_thread.join();
+        flow_thread.join();
+        sensor_thread.join();
+
     }catch (const dds::core::Exception& ce){
         std::cerr << "===[PUBLISHER] Exception : " << ce.what() <<std::endl;
         return EXIT_FAILURE;
