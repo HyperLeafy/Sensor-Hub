@@ -43,6 +43,14 @@ public:
         }
         std::cout << std::endl;
     }
+
+    bool try_pop(T& result) {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        if (m_queue.empty()) return false;
+        result = m_queue.front();
+        m_queue.pop();
+        return true;
+    }
     
     bool empty() const {
         std::lock_guard<std::mutex> lock(m_mutex);
