@@ -12,12 +12,12 @@ private:
 
 public:
     void push_in_queue(const T& item){
-        std::unique_lock<std::mutex> lock(m_mutex);
+        std::lock_guard<std::mutex> lock(m_mutex);
         m_queue.push(item);
     }
 
     std::optional<T> pop_from_queue(){
-        std::unique_lock<std::mutex> lock(m_mutex);
+        std::lock_guard<std::mutex> lock(m_mutex);
         if(m_queue.empty()){
             return std::nullopt;
         }

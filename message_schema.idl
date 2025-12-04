@@ -3,6 +3,7 @@ module sensorData
     struct msg{
         string sensor_id;
         double value;
-        long timeStamp;
+        long long timeStamp;
+        long sequence_num;
     };  
 };
