@@ -1,0 +1,14 @@
+/home/blank/Projects/Internship/sentienc/onboarding-task/sensor-hub-test/build/CMakeFiles/sensor_hub_lib.dir
+/home/blank/Projects/Internship/sentienc/onboarding-task/sensor-hub-test/build/CMakeFiles/message_lib_generate.dir
+/home/blank/Projects/Internship/sentienc/onboarding-task/sensor-hub-test/build/CMakeFiles/dds_wrap_generate.dir
+/home/blank/Projects/Internship/sentienc/onboarding-task/sensor-hub-test/build/CMakeFiles/sensorPublisher.dir
+/home/blank/Projects/Internship/sentienc/onboarding-task/sensor-hub-test/build/CMakeFiles/sensorSubscriber.dir
+/home/blank/Projects/Internship/sentienc/onboarding-task/sensor-hub-test/build/CMakeFiles/test.dir
+/home/blank/Projects/Internship/sentienc/onboarding-task/sensor-hub-test/build/CMakeFiles/edit_cache.dir
+/home/blank/Projects/Internship/sentienc/onboarding-task/sensor-hub-test/build/CMakeFiles/rebuild_cache.dir
+/home/blank/Projects/Internship/sentienc/onboarding-task/sensor-hub-test/build/test/CMakeFiles/core_tests.dir
+/home/blank/Projects/Internship/sentienc/onboarding-task/sensor-hub-test/build/test/CMakeFiles/queue_tests.dir
+/home/blank/Projects/Internship/sentienc/onboarding-task/sensor-hub-test/build/test/CMakeFiles/e2e_tests.dir
+/home/blank/Projects/Internship/sentienc/onboarding-task/sensor-hub-test/build/test/CMakeFiles/test.dir
+/home/blank/Projects/Internship/sentienc/onboarding-task/sensor-hub-test/build/test/CMakeFiles/edit_cache.dir
+/home/blank/Projects/Internship/sentienc/onboarding-task/sensor-hub-test/build/test/CMakeFiles/rebuild_cache.dir

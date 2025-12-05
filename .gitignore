@@ -10,7 +10,7 @@
 *.lib
 
 # Build directories
-build/
+
 
 # IDE specific files (Visual Studio)
 .vs/

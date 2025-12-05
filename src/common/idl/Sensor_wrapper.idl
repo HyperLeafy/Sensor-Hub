@@ -3,3 +3,4 @@ module SensorData {
         sequence<octet> data;  // Your serialized protobuf data
     };
 };
+
