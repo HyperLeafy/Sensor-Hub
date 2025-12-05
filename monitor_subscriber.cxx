@@ -136,7 +136,9 @@ int32_t main(){
         dds::domain::DomainParticipant participant(domain::default_id());
         dds::topic::Topic<SensorData::RawSensorData> sensorTopic(participant, "SENSOR-TELEMETRY");
         dds::sub::Subscriber subscriber(participant);
-        
+        dds::sub::qos::DataReaderQos reader_qos;
+        reader_qos << dds::core::policy::Reliability::Reliable() << dds::core::policy::History::KeepLast(10) << dds::core::policy::Durability::TransientLocal() << dds::core::policy::Deadline(dds::core::Duration::from_millisecs(1000));
+
         dds::sub::DataReader<SensorData::RawSensorData> sensorReader(subscriber, sensorTopic);
 
         int msg_count = 0;

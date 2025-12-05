@@ -203,8 +203,13 @@ int32_t main() {
         dds::topic::Topic<SensorData::RawSensorData> sensorTelemetyTopic(pub_participent_entity, "SENSOR-TELEMETRY");
         dds::pub::Publisher publisher_entity(pub_participent_entity);
         
-        std::cout<<"===[PUBLISHER] Successfully created Publisher Entity"<<std::endl;
+        // Create QoS for best-effort streaming data
+        // dds::pub::qos::DataWriterQos besteffort_sensor_qos;
+        // besteffort_sensor_qos << dds::core::policy::Reliability::BestEffort() << dds::core::policy::History::KeepLast(1) << dds::core::policy::Durability::Volatile();
+        dds::pub::qos::DataWriterQos reliable_sensor_qos;
+        reliable_sensor_qos << dds::core::policy::Reliability::Reliable() << dds::core::policy::History::KeepLast(10) << dds::core::policy::Durability::TransientLocal() << dds::core::policy::Deadline(dds::core::Duration::from_millisecs(1000));
         
+        std::cout<<"===[PUBLISHER] Successfully created Publisher Entity"<<std::endl;
         dds::pub::DataWriter<SensorData::RawSensorData> sensorWriterObj(publisher_entity, sensorTelemetyTopic);
         std::cout<<"===[PUBLISHER] Writer created" << std::endl;
         std::cout<<"===[PUBLISHER] STARTED"<<std::endl;

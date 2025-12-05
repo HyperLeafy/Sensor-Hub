@@ -15,6 +15,10 @@ find_package(CycloneDDS REQUIRED)
 find_package(CycloneDDS-CXX REQUIRED)
 find_package(Protobuf REQUIRED)
 
+
+enable_testing()
+add_subdirectory(test)
+
 # IDL GENERATOR IMPORTED 
 include(${CycloneDDS-CXX_DIR}/idlcxx/Generate.cmake)
 
@@ -39,4 +43,3 @@ add_executable(sensorSubscriber monitor_subscriber.cxx ${PROTO_SRCS})
 # Linking
 target_link_libraries(sensorPublisher PRIVATE message_lib dds_wrap CycloneDDS-CXX::ddscxx ${Protobuf_LIBRARIES})
 target_link_libraries(sensorSubscriber PRIVATE message_lib dds_wrap CycloneDDS-CXX::ddscxx ${Protobuf_LIBRARIES})
-
