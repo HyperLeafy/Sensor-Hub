@@ -10,6 +10,7 @@
 #include "utilites/safe_queue.h"
 #include "dds/dds.hpp"
 #include "build/message_schema.hpp"
+#include "Serializer/sensor.pb.h"
 #include "build/Sensor_wrapper.hpp"
 
 using namespace org::eclipse::cyclonedds;
@@ -103,6 +104,24 @@ void printDashboard(
     std::cout << std::string(90, '=') << "\n";
 }
 
+
+sensorData::msg on_data_recived(const SensorData::RawSensorData& raw_data_message){
+    sensor_proto::proto_serial_data proto_msg;
+    sensorData::msg temporary_data;
+    std::string buffer(raw_data_message.data().begin(), raw_data_message.data().end());
+    if(!proto_msg.ParseFromString(buffer)){
+        std::cerr << " Failed to Deserialze the buffer \n";
+        return temporary_data;
+    }
+    temporary_data.sensor_id(proto_msg.sensor_id());
+    temporary_data.sequence_num(proto_msg.sequence_num());
+    temporary_data.value(proto_msg.value());
+    temporary_data.timeStamp(proto_msg.timestamp());
+
+    // returnig final sensorData::msg 
+    return temporary_data;
+}   
+
 int32_t main(){
     std::map<std::string, int32_t> seq_map; 
     std::map<std::string, int32_t> total_received_sensor;
@@ -115,10 +134,10 @@ int32_t main(){
 
     try{
         dds::domain::DomainParticipant participant(domain::default_id());
-        dds::topic::Topic<sensorData::msg> sensorTopic(participant, "SENSOR-TELEMETRY");
+        dds::topic::Topic<SensorData::RawSensorData> sensorTopic(participant, "SENSOR-TELEMETRY");
         dds::sub::Subscriber subscriber(participant);
         
-        dds::sub::DataReader<sensorData::msg> sensorReader(subscriber, sensorTopic);
+        dds::sub::DataReader<SensorData::RawSensorData> sensorReader(subscriber, sensorTopic);
 
         int msg_count = 0;
         while(!ctrl_switch){
@@ -132,9 +151,11 @@ int32_t main(){
                                     ).count();
 
                 RECIVED_DATA data;
-                static_cast<sensorData::msg&>(data) = it.data();
+                // Converting raw into mangable data 
+                static_cast<sensorData::msg&>(data) = on_data_recived(it.data());
+                // adding recived time stamp
                 data.revive_time = rec_time;
-
+                // final data 
                 log_message(data);
 
                 std::string sensor_id = data.sensor_id();
