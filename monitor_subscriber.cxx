@@ -10,6 +10,7 @@
 #include "utilites/safe_queue.h"
 #include "dds/dds.hpp"
 #include "build/message_schema.hpp"
+#include "build/Sensor_wrapper.hpp"
 
 using namespace org::eclipse::cyclonedds;
 

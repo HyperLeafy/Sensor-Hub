@@ -1,0 +1,5 @@
+module SensorData {
+    struct RawSensorData {
+        sequence<octet> data;  // Your serialized protobuf data
+    };
+};

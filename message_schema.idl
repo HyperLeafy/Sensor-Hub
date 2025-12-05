@@ -5,5 +5,6 @@ module sensorData
         double value;
         long long timeStamp;
         long sequence_num;
+        string protobuff_data;
     };  
 };

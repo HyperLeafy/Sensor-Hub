@@ -5,30 +5,38 @@ project(sensor_hub LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Add the protobuf generated source
+set(PROTO_SRCS
+    ${CMAKE_CURRENT_BINARY_DIR}/build/Serializer/sensor.pb.cc
+)
+
 # Checking for packages
 find_package(CycloneDDS REQUIRED)
 find_package(CycloneDDS-CXX REQUIRED)
+find_package(Protobuf REQUIRED)
 
 # IDL GENERATOR IMPORTED 
 include(${CycloneDDS-CXX_DIR}/idlcxx/Generate.cmake)
 
+# Add the protobuf generated source
+set(PROTO_SRCS
+    ${CMAKE_CURRENT_BINARY_DIR}/Serializer/sensor.pb.cc
+)
+
+
 # Genrating idl files
 idlcxx_generate(TARGET message_lib FILES message_schema.idl)
+idlcxx_generate(TARGET dds_wrap FILES Sensor_wrapper.idl)
 
-# Executable Definations
-# 
-add_executable(publishApp ddsPublisher.cxx)
-add_executable(sensorPublisher sensor_publsiher.cxx)
+# Include the directory for protobuf headers
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/Serializer)
+include_directories(${Protobuf_INCLUDE_DIRS})
 
-# 
-add_executable(SubApp ddsSubscriber.cxx)
-add_executable(sensorSubscriber monitor_subscriber.cxx)
-# add_executable(SensorApp sensor_publsiher.cxx)
+# Executable Definitions
+add_executable(sensorPublisher sensor_publsiher.cxx ${PROTO_SRCS})
+add_executable(sensorSubscriber monitor_subscriber.cxx ${PROTO_SRCS})
 
-# Linking libraries to those executable
-target_link_libraries(publishApp PRIVATE message_lib CycloneDDS-CXX::ddscxx)
-target_link_libraries(sensorPublisher PRIVATE message_lib CycloneDDS-CXX::ddscxx)
+# Linking
+target_link_libraries(sensorPublisher PRIVATE message_lib dds_wrap CycloneDDS-CXX::ddscxx ${Protobuf_LIBRARIES})
+target_link_libraries(sensorSubscriber PRIVATE message_lib dds_wrap CycloneDDS-CXX::ddscxx ${Protobuf_LIBRARIES})
 
-target_link_libraries(sensorSubscriber PRIVATE message_lib CycloneDDS-CXX::ddscxx)
-target_link_libraries(SubApp PRIVATE message_lib CycloneDDS-CXX::ddscxx)
-# target_link_libraries(SensorApp PRIVATE message_lib CycloneDDS-CXX::ddscxx)
