@@ -15,3 +15,7 @@ build/
 # IDE specific files (Visual Studio)
 .vs/
 .vscode/
+
+#file
+sensor_publsiher_multichannnel.cxx
+monitor_subscriber_multichannel.cxx
