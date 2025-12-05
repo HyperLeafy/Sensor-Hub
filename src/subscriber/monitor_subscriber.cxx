@@ -7,11 +7,11 @@
 #include <iomanip>
 #include <map>
 #include <vector>
-#include "utilites/safe_queue.h"
+#include "utilities/safe_queue.h"
 #include "dds/dds.hpp"
-#include "build/message_schema.hpp"
+#include "message_schema.hpp"
 #include "Serializer/sensor.pb.h"
-#include "build/Sensor_wrapper.hpp"
+#include "Sensor_wrapper.hpp"
 
 using namespace org::eclipse::cyclonedds;
 

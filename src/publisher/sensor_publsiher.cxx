@@ -7,10 +7,11 @@
 #include <fstream>
 #include <iomanip>
 #include <map>
-#include "utilites/safe_queue.h"
+// #include "utilites/safe_queue.h"
+#include "utilities/safe_queue.h"
 #include "dds/dds.hpp"
-#include "build/message_schema.hpp"
-#include "build/Sensor_wrapper.hpp"
+#include "message_schema.hpp"
+#include "Sensor_wrapper.hpp"
 #include "Serializer/sensor.pb.h"
 
 using namespace org::eclipse::cyclonedds;

@@ -8,38 +8,8 @@
 #include <queue>
 #include <mutex>
 #include <condition_variable>
+#include "utilites/safe_queue.h"
 #include "../build/Serializer/sensor.pb.h"
-
-// ------------------------
-// Minimal thread-safe queue
-// ------------------------
-template <typename T>
-class SafeQueue {
-public:
-    void push(const T& item) {
-        std::lock_guard<std::mutex> lock(mutex_);
-        queue_.push(item);
-        cond_.notify_one();
-    }
-
-    bool try_pop(T& item) {
-        std::lock_guard<std::mutex> lock(mutex_);
-        if(queue_.empty()) return false;
-        item = queue_.front();
-        queue_.pop();
-        return true;
-    }
-
-    bool empty() {
-        std::lock_guard<std::mutex> lock(mutex_);
-        return queue_.empty();
-    }
-
-private:
-    std::queue<T> queue_;
-    std::mutex mutex_;
-    std::condition_variable cond_;
-};
 
 // ------------------------
 // Minimal sensor message
@@ -54,9 +24,9 @@ struct TestMsg {
 // ------------------------
 // Aggregator logic (DDS-free)
 // ------------------------
-void aggregator(SafeQueue<TestMsg>& temp,
-                SafeQueue<TestMsg>& pressure,
-                SafeQueue<TestMsg>& flow,
+void aggregator(safeQueue<TestMsg>& temp,
+                safeQueue<TestMsg>& pressure,
+                safeQueue<TestMsg>& flow,
                 std::vector<std::string>& serialized_outputs,
                 std::atomic<bool>& stop_flag) {
 
@@ -104,15 +74,15 @@ void aggregator(SafeQueue<TestMsg>& temp,
 // Test
 // ------------------------
 TEST(E2E, PipelineSerializationTest) {
-    SafeQueue<TestMsg> temp_queue, pres_queue, flow_queue;
+    safeQueue<TestMsg> temp_queue, pres_queue, flow_queue;
     std::vector<std::string> serialized_outputs;
     std::atomic<bool> stop_flag{false};
 
     // Producer threads
-    auto producer = [](SafeQueue<TestMsg>& q, const std::string& id){
+    auto producer = [](safeQueue<TestMsg>& q, const std::string& id){
         for(int i=0;i<5;i++){
             TestMsg msg{id, double(i*10), uint64_t(1000+i*100), uint32_t(i)};
-            q.push(msg);
+            q.push_in_queue(msg);
             std::this_thread::sleep_for(std::chrono::milliseconds(5));
         }
     };

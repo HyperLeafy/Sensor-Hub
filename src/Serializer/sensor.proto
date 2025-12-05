@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package sensor_proto;
+
+// Message representing a single sensor reading
+message proto_serial_data {
+    string sensor_id = 1;       // Unique sensor identifier
+    double value = 2;           // Sensor value
+    int64 timeStamp = 3;        // Timestamp in milliseconds
+    int64 sequence_num = 4;     // Sequence number of the reading
+}

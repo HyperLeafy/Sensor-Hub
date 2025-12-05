@@ -15,23 +15,17 @@ set(PROTO_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/../Serializer/sensor.pb.cc
 )
 
-# -------------------------------
 # Serialization test
-# -------------------------------
 add_executable(core_tests test_serialization.cxx ${PROTO_SRCS})
 target_link_libraries(core_tests PRIVATE GTest::gtest GTest::gtest_main ${Protobuf_LIBRARIES})
 add_test(NAME SerializationTest COMMAND core_tests)
 
-# -------------------------------
 # Queue test
-# -------------------------------
 add_executable(queue_tests test_safeQueue.cxx)
 target_link_libraries(queue_tests PRIVATE GTest::gtest GTest::gtest_main)
 add_test(NAME QueueTest COMMAND queue_tests)
 
-# -------------------------------
 # End-to-End test
-# -------------------------------
 add_executable(e2e_tests test_E2E.cxx ${PROTO_SRCS})
 target_link_libraries(e2e_tests PRIVATE GTest::gtest GTest::gtest_main ${Protobuf_LIBRARIES})
 add_test(NAME EndToEndTest COMMAND e2e_tests)
