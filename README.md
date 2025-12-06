@@ -60,10 +60,13 @@ The system is built with producer–consumer queues, atomic thread control flags
 
 ### Build Instructions
 
-`mkdir build
-cd build
-cmake ..
-make`
+For Linux based Systems
+```
+>>>mkdir build
+>>>cd build
+>>>cmake -DCMAKE_PREFIX_PATH=$HOME/.local ..
+>>>cmake --build .
+```
 
 ---
 
