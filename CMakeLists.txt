@@ -57,6 +57,9 @@ find_package(Protobuf REQUIRED)
 find_package(CycloneDDS REQUIRED)
 find_package(CycloneDDS-CXX REQUIRED)
 
+# SPDLOG
+find_package(spdlog REQUIRED)
+
 # Include directories
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -68,6 +71,18 @@ include_directories(
 # Protobuf generation
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS src/Serializer/sensor.proto)
 
+# Create a real library that builds the Protobuf sources
+add_library(sensor_hub_lib STATIC ${PROTO_SRCS})
+
+target_include_directories(sensor_hub_lib PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/common
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Serializer
+    ${Protobuf_INCLUDE_DIRS}
+)
+
+target_link_libraries(sensor_hub_lib PUBLIC ${Protobuf_LIBRARIES})
+
 # DDS IDL generation
 include(${CycloneDDS-CXX_DIR}/idlcxx/Generate.cmake)
 idlcxx_generate(TARGET message_lib FILES src/common/idl/message_schema.idl)
@@ -75,12 +90,13 @@ idlcxx_generate(TARGET dds_wrap FILES src/common/idl/Sensor_wrapper.idl)
 
 # Publisher executable
 add_executable(sensorPublisher src/publisher/sensor_publsiher.cxx ${PROTO_SRCS})
-target_link_libraries(sensorPublisher PRIVATE message_lib dds_wrap CycloneDDS-CXX::ddscxx ${Protobuf_LIBRARIES})
+target_link_libraries(sensorPublisher PRIVATE message_lib dds_wrap CycloneDDS-CXX::ddscxx spdlog::spdlog sensor_hub_lib)
 
 # Subscriber executable
 add_executable(sensorSubscriber src/subscriber/monitor_subscriber.cxx ${PROTO_SRCS})
-target_link_libraries(sensorSubscriber PRIVATE message_lib dds_wrap CycloneDDS-CXX::ddscxx ${Protobuf_LIBRARIES})
+target_link_libraries(sensorSubscriber PRIVATE message_lib dds_wrap CycloneDDS-CXX::ddscxx spdlog::spdlog sensor_hub_lib)
 
 # Tests
 enable_testing()
 add_subdirectory(test)
+

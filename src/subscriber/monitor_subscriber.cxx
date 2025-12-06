@@ -9,6 +9,9 @@
 #include <vector>
 #include "utilities/safe_queue.h"
 #include "dds/dds.hpp"
+#include "spdlog/spdlog.h"
+#include "spdlog/async.h"
+#include "spdlog/sinks/rotating_file_sink.h"
 #include "message_schema.hpp"
 #include "Serializer/sensor.pb.h"
 #include "Sensor_wrapper.hpp"
@@ -22,6 +25,9 @@ struct RECIVED_DATA : sensorData::msg{
     uint64_t revive_time; 
 };
 
+
+// LOGGING - SECTION
+//Depriciated
 void log_message(const RECIVED_DATA& data){
     std::ofstream logFile("Subscriber-Log.csv", std::ios::app);
     std::lock_guard<std::mutex> lock(log_mutex);    
@@ -31,6 +37,32 @@ void log_message(const RECIVED_DATA& data){
             << data.revive_time << " "
             << data.sequence_num() << "\n";        
 }
+
+void init_logging(){
+    // Logging setup
+    try{
+        //Pool intialized with 500 item and 3 background worker thread
+        spdlog::init_thread_pool(500,3);
+        // logger is set to have only 1mb storage and 3 file limit 
+        auto logger = spdlog::rotating_logger_mt<spdlog::async_factory>("sesnor-hub", "../logs/async_subscrib_log.txt", 1024*1024*1,3);
+        logger->set_pattern("[%Y-%m-%d %T.%e] [t:%t] [%n] [%l] %v");
+        spdlog::set_level(spdlog::level::info);
+
+        // Set this as the default logger and can be used gloablly 
+        spdlog::set_default_logger(logger);
+
+        // to destror the logger created
+        // spdlog::drop_all(); 
+    }catch(const spdlog::spdlog_ex& ex){
+        std::cerr << "Logger Iinitilization Failed : " << ex.what() << std::endl;
+    }
+}
+
+
+void on_recived_log_message(const RECIVED_DATA& data){
+    spdlog::info("PUB sensor={} value={} ts={} rs={} seq={}", data.sensor_id(), data.value(), data.timeStamp(), data.revive_time, data.sequence_num());  ;
+}
+
 
 int64_t latency(const RECIVED_DATA& data){
     return static_cast<int64_t>(data.revive_time) - static_cast<int64_t>(data.timeStamp());
@@ -104,7 +136,7 @@ void printDashboard(
     std::cout << std::string(90, '=') << "\n";
 }
 
-
+// Desrialing data reviced
 sensorData::msg on_data_recived(const SensorData::RawSensorData& raw_data_message){
     sensor_proto::proto_serial_data proto_msg;
     sensorData::msg temporary_data;
@@ -132,6 +164,9 @@ int32_t main(){
     std::map<std::string, uint64_t> latest_seq;
     std::map<std::string, int64_t> latest_lat;
 
+    // Logger initalized
+    init_logging();
+
     try{
         dds::domain::DomainParticipant participant(domain::default_id());
         dds::topic::Topic<SensorData::RawSensorData> sensorTopic(participant, "SENSOR-TELEMETRY");
@@ -157,9 +192,13 @@ int32_t main(){
                 static_cast<sensorData::msg&>(data) = on_data_recived(it.data());
                 // adding recived time stamp
                 data.revive_time = rec_time;
-                // final data 
-                log_message(data);
+                
+                // logging final data 
+                // Depriciated
+                // log_message(data);
+                on_recived_log_message(data);
 
+                                    
                 std::string sensor_id = data.sensor_id();
                 uint64_t current_seq = data.sequence_num();
                 int64_t lat = latency(data);

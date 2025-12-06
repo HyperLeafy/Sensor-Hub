@@ -1,6 +1,6 @@
 #include <iostream>
 #include <gtest/gtest.h>
-#include "../build/Serializer/sensor.pb.h"
+#include "sensor.pb.h"
 
 TEST(Serialization, RoundTrip){
     sensor_proto::proto_serial_data a;

@@ -9,7 +9,7 @@
 #include <mutex>
 #include <condition_variable>
 #include "utilites/safe_queue.h"
-#include "../build/Serializer/sensor.pb.h"
+#include "sensor.pb.h"
 
 // ------------------------
 // Minimal sensor message

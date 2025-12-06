@@ -8,3 +8,4 @@ module sensorData
         string protobuff_data;
     };  
 };
+

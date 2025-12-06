@@ -1,0 +1,130 @@
+sensorPublisher: \
+  /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o \
+  /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o \
+  /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o \
+  CMakeFiles/sensorPublisher.dir/src/publisher/sensor_publsiher.cxx.o \
+  CMakeFiles/sensorPublisher.dir/sensor.pb.cc.o \
+  CMakeFiles/sensorPublisher.dir/message_schema.cpp.o \
+  CMakeFiles/sensorPublisher.dir/Sensor_wrapper.cpp.o \
+  /home/blank/.local/lib64/libddscxx.so.0.11.0 \
+  /usr/lib64/libspdlog.so.1.15.3 \
+  libsensor_hub_lib.a \
+  /home/blank/.local/lib64/libddsc.so.0.11.0 \
+  /usr/lib64/libfmt.so.11.1.4 \
+  /usr/lib64/libprotobuf.so \
+  /usr/lib/gcc/x86_64-redhat-linux/15/libstdc++.so \
+  /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libm.so \
+  /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libm.so \
+  /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libm.so \
+  /lib64/libm.so.6 \
+  /lib64/libmvec.so.1 \
+  /usr/lib/gcc/x86_64-redhat-linux/15/libgcc_s.so \
+  /usr/lib/gcc/x86_64-redhat-linux/15/libgcc_s.so \
+  /usr/lib/gcc/x86_64-redhat-linux/15/libgcc_s.so \
+  /lib64/libgcc_s.so.1 \
+  /usr/lib/gcc/x86_64-redhat-linux/15/libgcc.a \
+  /usr/lib/gcc/x86_64-redhat-linux/15/libgcc.a \
+  /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libc.so \
+  /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libc.so \
+  /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libc.so \
+  /lib64/libc.so.6 \
+  /usr/lib64/libc_nonshared.a \
+  /lib64/ld-linux-x86-64.so.2 \
+  /usr/lib/gcc/x86_64-redhat-linux/15/libgcc_s.so \
+  /usr/lib/gcc/x86_64-redhat-linux/15/libgcc_s.so \
+  /usr/lib/gcc/x86_64-redhat-linux/15/libgcc_s.so \
+  /lib64/libgcc_s.so.1 \
+  /usr/lib/gcc/x86_64-redhat-linux/15/libgcc.a \
+  /usr/lib/gcc/x86_64-redhat-linux/15/libgcc.a \
+  /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o \
+  /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o \
+  /usr/lib64/libssl.so.3 \
+  /usr/lib64/libcrypto.so.3 \
+  /lib64/ld-linux-x86-64.so.2 \
+  /usr/lib64/libz.so.1
+
+/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o:
+
+CMakeFiles/sensorPublisher.dir/src/publisher/sensor_publsiher.cxx.o:
+
+CMakeFiles/sensorPublisher.dir/sensor.pb.cc.o:
+
+CMakeFiles/sensorPublisher.dir/message_schema.cpp.o:
+
+CMakeFiles/sensorPublisher.dir/Sensor_wrapper.cpp.o:
+
+/home/blank/.local/lib64/libddscxx.so.0.11.0:
+
+/usr/lib64/libspdlog.so.1.15.3:
+
+libsensor_hub_lib.a:
+
+/home/blank/.local/lib64/libddsc.so.0.11.0:
+
+/usr/lib64/libfmt.so.11.1.4:
+
+/usr/lib64/libprotobuf.so:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/libstdc++.so:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libm.so:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libm.so:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libm.so:
+
+/lib64/libm.so.6:
+
+/lib64/libmvec.so.1:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/libgcc_s.so:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/libgcc_s.so:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/libgcc_s.so:
+
+/lib64/libgcc_s.so.1:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/libgcc.a:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/libgcc.a:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libc.so:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libc.so:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libc.so:
+
+/lib64/libc.so.6:
+
+/usr/lib64/libc_nonshared.a:
+
+/lib64/ld-linux-x86-64.so.2:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/libgcc_s.so:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/libgcc_s.so:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/libgcc_s.so:
+
+/lib64/libgcc_s.so.1:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/libgcc.a:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/libgcc.a:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/crtend.o:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o:
+
+/usr/lib64/libssl.so.3:
+
+/usr/lib64/libcrypto.so.3:
+
+/lib64/ld-linux-x86-64.so.2:
+
+/usr/lib64/libz.so.1:
