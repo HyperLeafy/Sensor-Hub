@@ -228,6 +228,9 @@ Protobuf_PROTOC_LIBRARY_RELEASE:FILEPATH=/usr/lib64/libprotoc.so
 //Path to a program.
 _idlc_executable:FILEPATH=/home/blank/.local/bin/idlc
 
+//The directory containing a CMake configuration file for fmt.
+fmt_DIR:PATH=/usr/lib64/cmake/fmt
+
 //Value Computed by CMake
 sensor_hub_BINARY_DIR:STATIC=/home/blank/Projects/Internship/sentienc/onboarding-task/sensor-hub-test/build
 
@@ -236,6 +239,9 @@ sensor_hub_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 sensor_hub_SOURCE_DIR:STATIC=/home/blank/Projects/Internship/sentienc/onboarding-task/sensor-hub-test
+
+//The directory containing a CMake configuration file for spdlog.
+spdlog_DIR:PATH=/usr/lib64/cmake/spdlog
 
 
 ########################
@@ -379,6 +385,8 @@ CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 FIND_PACKAGE_MESSAGE_DETAILS_GTest:INTERNAL=[/usr/lib64/cmake/GTest/GTestConfig.cmake][c ][v1.15.2()]
 //Details about finding Protobuf
 FIND_PACKAGE_MESSAGE_DETAILS_Protobuf:INTERNAL=[/usr/lib64/libprotobuf.so][/usr/include][v3.19.6()]
+//Details about finding Threads
+FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 //ADVANCED property for variable: Protobuf_INCLUDE_DIR
 Protobuf_INCLUDE_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: Protobuf_LIBRARY_DEBUG

@@ -169,8 +169,10 @@ sensorSubscriber: CMakeFiles/sensorSubscriber.dir/Sensor_wrapper.cpp.o
 sensorSubscriber: CMakeFiles/sensorSubscriber.dir/build.make
 sensorSubscriber: CMakeFiles/sensorSubscriber.dir/compiler_depend.ts
 sensorSubscriber: /home/blank/.local/lib64/libddscxx.so.0.11.0
+sensorSubscriber: /usr/lib64/libspdlog.so.1.15.3
 sensorSubscriber: libsensor_hub_lib.a
 sensorSubscriber: /home/blank/.local/lib64/libddsc.so.0.11.0
+sensorSubscriber: /usr/lib64/libfmt.so.11.1.4
 sensorSubscriber: /usr/lib64/libprotobuf.so
 sensorSubscriber: CMakeFiles/sensorSubscriber.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/blank/Projects/Internship/sentienc/onboarding-task/sensor-hub-test/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable sensorSubscriber"

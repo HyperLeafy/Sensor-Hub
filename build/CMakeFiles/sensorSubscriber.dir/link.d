@@ -7,8 +7,10 @@ sensorSubscriber: \
   CMakeFiles/sensorSubscriber.dir/message_schema.cpp.o \
   CMakeFiles/sensorSubscriber.dir/Sensor_wrapper.cpp.o \
   /home/blank/.local/lib64/libddscxx.so.0.11.0 \
+  /usr/lib64/libspdlog.so.1.15.3 \
   libsensor_hub_lib.a \
   /home/blank/.local/lib64/libddsc.so.0.11.0 \
+  /usr/lib64/libfmt.so.11.1.4 \
   /usr/lib64/libprotobuf.so \
   /usr/lib/gcc/x86_64-redhat-linux/15/libstdc++.so \
   /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libm.so \
@@ -57,9 +59,13 @@ CMakeFiles/sensorSubscriber.dir/Sensor_wrapper.cpp.o:
 
 /home/blank/.local/lib64/libddscxx.so.0.11.0:
 
+/usr/lib64/libspdlog.so.1.15.3:
+
 libsensor_hub_lib.a:
 
 /home/blank/.local/lib64/libddsc.so.0.11.0:
+
+/usr/lib64/libfmt.so.11.1.4:
 
 /usr/lib64/libprotobuf.so:
 

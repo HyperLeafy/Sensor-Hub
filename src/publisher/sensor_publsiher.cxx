@@ -10,16 +10,22 @@
 // #include "utilites/safe_queue.h"
 #include "utilities/safe_queue.h"
 #include "dds/dds.hpp"
+#include "spdlog/spdlog.h"
+#include "spdlog/async.h"
+#include "spdlog/sinks/rotating_file_sink.h"
 #include "message_schema.hpp"
 #include "Sensor_wrapper.hpp"
 #include "Serializer/sensor.pb.h"
 
 using namespace org::eclipse::cyclonedds;
 
+// Thread safe control variables
 std::atomic<bool> ctrl_switch_temp{false};
 std::atomic<bool> ctrl_switch_pressure{false};
 std::atomic<bool> ctrl_switch_flow{false};
 std::atomic<bool> ctrl_switch_aggregator{false};
+
+// Thread safe counters
 std::atomic<uint32_t> seq_counter{0};
 std::atomic<uint32_t> temp_seq_counter{0};
 std::atomic<uint32_t> pres_seq_counter{0};
@@ -50,6 +56,7 @@ void temp_sensor_data(safeQueue<sensorData::msg>& squeue, double_t min_temp, dou
         squeue.push_in_queue(temp_meassge);
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
+    spdlog::info("ERROR::Temperature sensor shutting down");
 }
 
 void press_sensor_data(safeQueue<sensorData::msg>& squeue, double_t min_press, double_t max_press){
@@ -68,6 +75,7 @@ void press_sensor_data(safeQueue<sensorData::msg>& squeue, double_t min_press, d
         squeue.push_in_queue(pressure_meassge);
         std::this_thread::sleep_for(std::chrono::milliseconds(100));       
     }
+    spdlog::info("ERROR::Pressure sensor shutting down");
 }
 
 void flow_sensor_data(safeQueue<sensorData::msg>& squeue, double_t min_rate, double_t max_rate){
@@ -86,12 +94,40 @@ void flow_sensor_data(safeQueue<sensorData::msg>& squeue, double_t min_rate, dou
         squeue.push_in_queue(flow_message);
         std::this_thread::sleep_for(std::chrono::milliseconds(100)); 
     }
+    spdlog::info("ERROR::Flow sensor shutting down");
 }
 
+// LOGGING - SECTION
+// Depriciated
 void log_message(const sensorData::msg& msg){
     std::ofstream logFile("Publisher-Log.csv", std::ios::app);
     std::lock_guard<std::mutex> lock(log_mutex);    
     logFile<< msg.sensor_id() << " " << msg.value() << " " << msg.timeStamp() << " " << msg.sequence_num() << "\n";
+}
+// Curently used
+void init_logging(){
+    // Logging setup
+    try{
+        //Pool intialized with 500 item and 3 background worker thread
+        spdlog::init_thread_pool(500,3);
+        // logger is set to have only 1kb storage and 3 file limit 
+        auto logger = spdlog::rotating_logger_mt<spdlog::async_factory>("sesnor-hub", "../logs/async_publish_log.txt", 1024*1024*1,3);
+        logger->set_pattern("[%Y-%m-%d %T.%e] [t:%t] [%n] [%l] %v");
+        spdlog::set_level(spdlog::level::info);
+
+        // Set this as the default logger and can be used gloablly 
+        spdlog::set_default_logger(logger);
+
+        // to destror the logger created
+        // spdlog::drop_all(); 
+    }catch(const spdlog::spdlog_ex& ex){
+        std::cerr << "Logger Iinitilization Failed : " << ex.what() << std::endl;
+    }
+}
+
+
+void on_publish_log_message(const sensorData::msg& msg_data){
+    spdlog::info("PUB sensor={} value={} ts={} seq={}", msg_data.sensor_id(), msg_data.value(), msg_data.timeStamp(), msg_data.sequence_num());
 }
 
 void clear_terminal() {
@@ -158,7 +194,11 @@ void aggregrator(safeQueue<sensorData::msg>& temp, safeQueue<sensorData::msg>& p
             for(auto msg: to_publish){
                 // sensorWriter.write(msg);
                 seq_counter++;
-                log_message(msg);
+                // Depriciated
+                // log_message(msg);
+
+                //Loggint message using spdlog into log/async_publish_log.txt
+                on_publish_log_message(msg);
 
                 // PROTOBUF CONVERSION
                 proto_msg_data.set_sensor_id(msg.sensor_id());
@@ -194,12 +234,83 @@ void aggregrator(safeQueue<sensorData::msg>& temp, safeQueue<sensorData::msg>& p
     }
 }
 
+#include <string>
+#include <algorithm>
+
+// helper
+static bool all_sensors_stopped() {
+    return ctrl_switch_temp.load() && ctrl_switch_pressure.load() && ctrl_switch_flow.load();
+}
+
+void interactive_shutdown_loop()
+{
+    std::string line;
+    spdlog::info("Interactive control: (T/P/F to stop sensors, ENTER to shutdown all)");
+    while (true)
+    {
+        std::cout << "Command> " << std::flush;
+        if (!std::getline(std::cin, line)) {
+            spdlog::info("stdin closed - requesting full shutdown");
+            // treat as full shutdown
+            ctrl_switch_temp.store(true);
+            ctrl_switch_pressure.store(true);
+            ctrl_switch_flow.store(true);
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+            ctrl_switch_aggregator.store(true);
+            break;
+        }
+
+        // trim whitespace
+        line.erase(line.begin(), std::find_if(line.begin(), line.end(), [](unsigned char ch){ return !std::isspace(ch); }));
+        if (line.empty()) {
+            spdlog::info("ENTER pressed - full shutdown");
+            ctrl_switch_temp.store(true);
+            ctrl_switch_pressure.store(true);
+            ctrl_switch_flow.store(true);
+            std::this_thread::sleep_for(std::chrono::milliseconds(200)); // let queues drain
+            ctrl_switch_aggregator.store(true);
+            break;
+        }
+
+        char c = line[0];
+        switch (c) {
+            case 'T': case 't':
+                ctrl_switch_temp.store(true);
+                spdlog::info("Temperature sensor stop requested");
+                break;
+            case 'P': case 'p':
+                ctrl_switch_pressure.store(true);
+                spdlog::info("Pressure sensor stop requested");
+                break;
+            case 'F': case 'f':
+                ctrl_switch_flow.store(true);
+                spdlog::info("Flow sensor stop requested");
+                break;
+            default:
+                std::cout << "Unknown command: '" << c << "' (T,P,F or Enter)\n";
+        }
+
+        // If all producers stopped, stop aggregator automatically after small grace
+        if (all_sensors_stopped()) {
+            spdlog::info("All sensors stopped → allowing aggregator to drain then stopping it");
+            std::this_thread::sleep_for(std::chrono::milliseconds(300));
+            ctrl_switch_aggregator.store(true);
+            break;
+        }
+    }
+}
+
+
 int32_t main() {
     safeQueue<sensorData::msg> temp_sensor_data_queue;
     safeQueue<sensorData::msg> pres_sensor_data_queue;
     safeQueue<sensorData::msg> flow_sensor_data_queue;
-
+    
+    // Initializing logging 
+    init_logging();
+    
     try{
+        // DDS Setup
         dds::domain::DomainParticipant pub_participent_entity(domain::default_id());
         dds::topic::Topic<SensorData::RawSensorData> sensorTelemetyTopic(pub_participent_entity, "SENSOR-TELEMETRY");
         dds::pub::Publisher publisher_entity(pub_participent_entity);
@@ -220,12 +331,17 @@ int32_t main() {
         std::thread flow_thread(flow_sensor_data, std::ref(flow_sensor_data_queue), 500.0, 1000.0);
         std::thread sensor_thread(aggregrator, std::ref(temp_sensor_data_queue), std::ref(pres_sensor_data_queue), std::ref(flow_sensor_data_queue), std::ref(sensorWriterObj));
 
-        std::this_thread::sleep_for(std::chrono::seconds(20));
 
-        ctrl_switch_temp = true;
-        ctrl_switch_pressure = true;
-        ctrl_switch_flow = true;
-        ctrl_switch_aggregator = true;
+        // Shutdown 
+        // temporary just exits after 20 sec
+        // std::this_thread::sleep_for(std::chrono::seconds(20));
+        
+
+        std::cout << "Press ENTER to stop Publishing\n";
+        std::cout << "Press T to stop temperature sensor\n";
+        std::cout << "Press P to stop temperature sensor\n";
+        std::cout << "Press F to stop temperature sensor\n";
+        interactive_shutdown_loop();
 
         std::cout<<"\n===[PUBLISHER] STOPPED"<<std::endl;
         temp_thread.join();

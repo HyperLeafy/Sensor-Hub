@@ -57,6 +57,9 @@ find_package(Protobuf REQUIRED)
 find_package(CycloneDDS REQUIRED)
 find_package(CycloneDDS-CXX REQUIRED)
 
+# SPDLOG
+find_package(spdlog REQUIRED)
+
 # Include directories
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -87,11 +90,11 @@ idlcxx_generate(TARGET dds_wrap FILES src/common/idl/Sensor_wrapper.idl)
 
 # Publisher executable
 add_executable(sensorPublisher src/publisher/sensor_publsiher.cxx ${PROTO_SRCS})
-target_link_libraries(sensorPublisher PRIVATE message_lib dds_wrap CycloneDDS-CXX::ddscxx sensor_hub_lib)
+target_link_libraries(sensorPublisher PRIVATE message_lib dds_wrap CycloneDDS-CXX::ddscxx spdlog::spdlog sensor_hub_lib)
 
 # Subscriber executable
 add_executable(sensorSubscriber src/subscriber/monitor_subscriber.cxx ${PROTO_SRCS})
-target_link_libraries(sensorSubscriber PRIVATE message_lib dds_wrap CycloneDDS-CXX::ddscxx sensor_hub_lib)
+target_link_libraries(sensorSubscriber PRIVATE message_lib dds_wrap CycloneDDS-CXX::ddscxx spdlog::spdlog sensor_hub_lib)
 
 # Tests
 enable_testing()
