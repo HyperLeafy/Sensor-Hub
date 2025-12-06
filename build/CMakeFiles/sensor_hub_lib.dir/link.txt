@@ -1,2 +1,0 @@
-/usr/bin/ar qc libsensor_hub_lib.a CMakeFiles/sensor_hub_lib.dir/sensor.pb.cc.o
-/usr/bin/ranlib libsensor_hub_lib.a
